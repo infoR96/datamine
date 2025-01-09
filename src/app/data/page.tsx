@@ -1,4 +1,3 @@
-// CsvUploader.tsx
 'use client'
 import dynamic from 'next/dynamic';
 import React, { useState } from "react";
@@ -7,18 +6,9 @@ import Papa from "papaparse";
 // Cargar Plot dinámicamente
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-interface Trace {
-  x: number[];
-  y: number[];
-  name: string;
-  type: string;
-  marker?: { color: string };
-  yaxis?: string;
-}
-
 const CsvUploader: React.FC = () => {
   const [data, setData] = useState<string[][]>([]);
-  const [plotData, setPlotData] = useState<Trace[]>([]);
+  const [plotData, setPlotData] = useState<Plotly.Data[]>([]); // Usar Plotly.Data
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -40,7 +30,7 @@ const CsvUploader: React.FC = () => {
     const yToneladas = csvData.map((row) => parseFloat(row[1])); // Toneladas
     const yAu = csvData.map((row) => parseFloat(row[2])); // Au (g/tn)
 
-    const trace1: Trace = {
+    const trace1: Plotly.Data = {
       x: xValues,
       y: yToneladas,
       name: "Toneladas",
@@ -48,7 +38,7 @@ const CsvUploader: React.FC = () => {
       marker: { color: "orange" },
     };
 
-    const trace2: Trace = {
+    const trace2: Plotly.Data = {
       x: xValues,
       y: yAu,
       name: "Au (g/tn)",
